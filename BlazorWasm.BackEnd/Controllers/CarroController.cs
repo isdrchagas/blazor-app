@@ -3,6 +3,7 @@ using BlazorWasmServer.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorWasm.BackEnd.Controllers
@@ -32,7 +33,17 @@ namespace BlazorWasm.BackEnd.Controllers
                 return resp;
             }
 
-            [HttpPost]
+            [HttpGet("filter/{marca}")]
+            public async Task<ActionResult<List<Carro>>> Get(string marca)
+            {
+                return await context.Carros
+                    .Where(carro => carro.Marca == marca)
+                    .OrderByDescending(carro => carro.AnoFabricacao)
+                    .ToListAsync();
+            }   
+
+
+        [HttpPost]
             public async Task<ActionResult<int>> Post(Carro carro)
             {
                 context.Carros.Add(carro);
