@@ -74,6 +74,16 @@ namespace BlazorWasm.FrontEnd.Repositorio
                 throw new ApplicationException(await response.GetBody());
             }
         }
+
+        public async Task<List<Carro>> Get(string Marca)
+        {
+            var response = await httpService.Get<List<Carro>>($"{url}/filter/{Marca}");
+            if (!response.Sucesso)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+            return response.Response;
+        }
     }
 
 }

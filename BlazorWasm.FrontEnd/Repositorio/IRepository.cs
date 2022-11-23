@@ -10,6 +10,7 @@ namespace BlazorWasm.FrontEnd.Repositorio
             Task<int> AddAndGetId(T item);
             Task Delete(int Id);
             Task<List<T>> Get();
+            Task<List<T>> Get(string filter);
             Task<T> Get(int id);
             Task Update(T item);
         }
