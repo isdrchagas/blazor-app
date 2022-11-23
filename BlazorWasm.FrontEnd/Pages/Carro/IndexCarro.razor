@@ -1,0 +1,53 @@
+﻿@page "/carro"
+@inject IRepository<Carro> RepositorioCarros
+
+<h3>Index Carro</h3>
+
+<div class="form-group">
+    <a class="btn btn-info" href="carro/cadastro"> Cadastrar Carro</a>
+</div>
+
+@if (Carros is not null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Ano Fabricação</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Carros)
+            {
+                <tr>
+                    <td>@item.Modelo</td>
+                    <td>@item.Marca</td>
+                    <td>@item.AnoFabricacao</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="@(() => DeletarItem(item.Id))">Deletar</button>
+                        <a class="btn btn-success" href="/carro/editar/@item.Id">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else {
+    <p>Não há carros cadastrados ainda.</p>
+}
+
+@code {
+    List<Carro> Carros = new List<Carro>();
+
+    protected async override Task OnInitializedAsync()//Executa ao abri a pagina
+    {
+        Carros = await RepositorioCarros.Get();
+    }
+
+    private async Task DeletarItem(int Id)
+    {
+        await RepositorioCarros.Delete(Id);
+        Carros = await RepositorioCarros.Get();
+    }
+}

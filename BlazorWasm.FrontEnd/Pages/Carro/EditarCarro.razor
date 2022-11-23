@@ -1,0 +1,48 @@
+﻿@page "/carro/editar/{CarroId:int}"
+@inject IRepository<Carro> repository
+@inject NavigationManager navigationManager
+
+
+<h3>Editar Carro</h3>
+	<div class="form-group">
+		<label>Modelo:</label>
+		<div>
+			<input class="form-control" @bind="@carro.Modelo" />
+		</div>
+		<label>Marca:</label>
+		<div>
+			<input class="form-control" @bind="@carro.Marca" />
+		</div>
+		<label>Ano Fabricação:</label>
+		<div>
+			<input class="form-control" @bind="@carro.AnoFabricacao" />
+		</div>
+	</div>
+
+	<button class="btn btn-success" @onclick="Edit">Salvar</button>
+
+
+@code {
+	[Parameter] public int CarroId { get; set; }
+	private Carro carro = new Carro();
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var resp = await repository.Get(CarroId);
+			carro = resp;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Erro Ao Editar Carro: " + ex.Message);
+
+		}
+	}
+
+	private async Task Edit()
+	{
+		await repository.Update(carro);
+		navigationManager.NavigateTo("carro");
+	}
+}

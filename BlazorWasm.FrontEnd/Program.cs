@@ -32,6 +32,7 @@ namespace BlazorWasm.Client
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IHttpService, HttpService>();
+            services.AddTransient<IRepository<Carro>, CarroRepository>();
         }
     }
 }

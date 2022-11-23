@@ -1,0 +1,45 @@
+﻿@page "/carro/cadastro"
+@inject IRepository<Carro> RepositorioCarros
+@inject NavigationManager navigationManager
+
+    <div class="body">
+        <div class="add-form">
+             <div class="add-form-form">
+                <h2>Cadastrar novo carro</h2>
+
+                <div class="form-group">
+                    <input class="form-control" placeholder="Modelo" id="nome" @bind="modelo">
+                </div>
+
+                <div class ="form-group">
+                    <input class="form-control" placeholder="Marca" id="nome" @bind="marca">
+                </div>
+
+                <div class="form-group">
+                    <label>Ano Fabricação:</label>
+                    <input class="form-control" placeholder="Ano" id="dia" @bind="anoFabricacao">
+                </div>
+               
+                <button class="btn btn-primary" @onclick="addToList">Cadastrar</button>
+             </div>
+        </div>
+    </div>
+
+@code {
+    string marca;
+    string modelo;
+    string anoFabricacao;
+
+    public async void addToList()
+    {
+        Carro carro = new Carro();
+        carro.Modelo = modelo;
+        carro.AnoFabricacao = anoFabricacao;
+        carro.Marca = marca;
+
+        await RepositorioCarros.Add(carro);
+        StateHasChanged();
+        navigationManager.NavigateTo("carro");
+    }
+
+}
