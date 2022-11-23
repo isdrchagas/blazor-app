@@ -9,6 +9,21 @@
 
 @if (Carros is not null)
 {
+    <div style="padding-bottom: 11px;">
+        <select class="custom-select col-md-3" @bind="@selectedValue">
+            <option value="Todos">Todos</option>
+            @if (Marcas.Count > 0)
+            {
+                foreach (String marca in Marcas)
+                {
+                    <option value="@marca">@marca</option>
+                }
+            }
+        </select>
+
+        <button class="btn btn-primary" @onclick="(() => Filtra(selectedValue))">Filtrar</button>
+    </div>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -39,15 +54,34 @@
 
 @code {
     List<Carro> Carros = new List<Carro>();
+    List<String> Marcas = new List<String>();
+    string selectedValue = "";
 
     protected async override Task OnInitializedAsync()//Executa ao abri a pagina
     {
         Carros = await RepositorioCarros.Get();
+        // convertendo a lista de carros em uma lista de string sem pegar os duplicados
+        Marcas = Carros.ConvertAll(c => c.Marca).Distinct().ToList();
     }
 
     private async Task DeletarItem(int Id)
     {
         await RepositorioCarros.Delete(Id);
         Carros = await RepositorioCarros.Get();
+
+        // atualizando a lista de marcas ao deletar um item
+        Marcas = Carros.ConvertAll(c => c.Marca).Distinct().ToList();
+    }
+
+    private async Task Filtra(string Marca)
+    {
+        if (Marca == "Todos")
+        {
+            Carros = await RepositorioCarros.Get();
+        }
+        else
+        {
+            Carros = await RepositorioCarros.Get(Marca);
+        }
     }
 }
